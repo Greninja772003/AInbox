@@ -28,9 +28,19 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { TooltipProps } from "recharts";
-import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
+import {
+  NameType,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
 
 const DashboardView = () => {
   const navigate = useNavigate();
@@ -44,36 +54,36 @@ const DashboardView = () => {
 
   // Color palettes for charts
   const PRIORITY_COLORS = {
-    high: "#ef4444",    // Red
-    medium: "#f59e0b",  // Amber
-    low: "#10b981",     // Green
-    urgent: "#7c3aed",  // Purple
-    important: "#3b82f6" // Blue
+    high: "#ef4444", // Red
+    medium: "#f59e0b", // Amber
+    low: "#10b981", // Green
+    urgent: "#7c3aed", // Purple
+    important: "#3b82f6", // Blue
   };
 
   const SENTIMENT_COLORS = {
     positive: "#10b981", // Green
-    neutral: "#9ca3af",  // Gray
-    negative: "#ef4444"  // Red
+    neutral: "#9ca3af", // Gray
+    negative: "#ef4444", // Red
   };
 
   const LABEL_COLORS = {
-    work: "#3b82f6",     // Blue
-    personal: "#ec4899",  // Pink
-    meeting: "#8b5cf6",   // Purple
+    work: "#3b82f6", // Blue
+    personal: "#ec4899", // Pink
+    meeting: "#8b5cf6", // Purple
     transaction: "#f59e0b", // Amber
-    otp: "#a3e635",      // Lime
-    other: "#9ca3af",    // Gray
-    support: "#06b6d4",  // Cyan
-    marketing: "#f97316" // Orange
+    otp: "#a3e635", // Lime
+    other: "#9ca3af", // Gray
+    support: "#06b6d4", // Cyan
+    marketing: "#f97316", // Orange
   };
 
   const INTENT_COLORS = {
-    inform: "#3b82f6",   // Blue
-    request: "#8b5cf6",  // Purple
-    confirm: "#10b981",  // Green
+    inform: "#3b82f6", // Blue
+    request: "#8b5cf6", // Purple
+    confirm: "#10b981", // Green
     escalate: "#ef4444", // Red
-    notify: "#f59e0b"    // Amber
+    notify: "#f59e0b", // Amber
   };
 
   useEffect(() => {
@@ -88,7 +98,9 @@ const DashboardView = () => {
         setEmails(res.data);
         setError("");
       } catch (err) {
-        setError("Failed to load emails: " + (err.response?.data?.error || err.message));
+        setError(
+          "Failed to load emails: " + (err.response?.data?.error || err.message)
+        );
       } finally {
         setLoading(false);
       }
@@ -102,19 +114,21 @@ const DashboardView = () => {
   // First apply search filter, then category filter if selected
   const searchFilteredEmails = emails.filter((email) => {
     if (!searchQuery) return true;
-    
+
     const subject = email.subject?.toLowerCase() || "";
     const sender = email.from?.toLowerCase() || "";
     const query = searchQuery.toLowerCase();
-    
+
     return subject.includes(query) || sender.includes(query);
   });
 
   const filteredEmails = selectedCategory
     ? searchFilteredEmails.filter(
         (e) =>
-          e.classification?.priority?.toLowerCase() === selectedCategory.toLowerCase() ||
-          e.classification?.label?.toLowerCase() === selectedCategory.toLowerCase()
+          e.classification?.priority?.toLowerCase() ===
+            selectedCategory.toLowerCase() ||
+          e.classification?.label?.toLowerCase() ===
+            selectedCategory.toLowerCase()
       )
     : searchFilteredEmails;
 
@@ -144,13 +158,14 @@ const DashboardView = () => {
     return { priorityMap, sentimentMap, labelMap, intentMap };
   };
 
-  const { priorityMap, sentimentMap, labelMap, intentMap } = generateSummaryCounts();
+  const { priorityMap, sentimentMap, labelMap, intentMap } =
+    generateSummaryCounts();
 
   // Convert maps to arrays for charts
   const createChartData = (dataMap) => {
     return Object.entries(dataMap).map(([name, value]) => ({
       name: name.charAt(0).toUpperCase() + name.slice(1),
-      value: value as number
+      value: value as number,
     }));
   };
 
@@ -160,16 +175,18 @@ const DashboardView = () => {
   const intentData = createChartData(intentMap);
 
   // Custom tooltip component for charts
-  const CustomTooltip = ({ 
-    active, 
-    payload, 
-    label 
+  const CustomTooltip = ({
+    active,
+    payload,
+    label,
   }: TooltipProps<ValueType, NameType>) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-2 shadow-md border rounded-md">
           <p className="text-sm font-semibold">{`${payload[0].name}: ${payload[0].value}`}</p>
-          <p className="text-xs text-gray-500">{`${Math.round((payload[0].value as number / emails.length) * 100)}% of emails`}</p>
+          <p className="text-xs text-gray-500">{`${Math.round(
+            ((payload[0].value as number) / emails.length) * 100
+          )}% of emails`}</p>
         </div>
       );
     }
@@ -183,7 +200,10 @@ const DashboardView = () => {
 
   return (
     <div className="container mx-auto p-6 max-w-6xl">
-      <h1 className="text-3xl font-bold mb-6">📊 AI Email Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6 flex items-center">
+        <img src="/logo.png" alt="AInbox Logo" className="w-10 h-10 mr-3" />
+        AInbox Dashboard
+      </h1>
 
       {error && (
         <Alert variant="destructive" className="mb-4">
@@ -243,10 +263,10 @@ const DashboardView = () => {
           </Card>
         ))
       ) : filteredEmails.length > 0 ? (
-        (selectedCategory || searchQuery) ? (
+        selectedCategory || searchQuery ? (
           filteredEmails.map((email, index) => (
-            <Card 
-              key={index} 
+            <Card
+              key={index}
               className="mb-4 cursor-pointer hover:shadow-md transition-shadow"
               onClick={() => handleNavigateToEmailDetails(email)}
             >
@@ -255,12 +275,22 @@ const DashboardView = () => {
                 <CardDescription>From: {email.from}</CardDescription>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2 text-sm">
-                <Badge variant="secondary">Priority: {email.classification?.priority}</Badge>
-                <Badge variant="outline">Sentiment: {email.classification?.sentiment}</Badge>
-                <Badge variant="outline">Label: {email.classification?.label}</Badge>
-                <Badge variant="outline">Intent: {email.classification?.intent}</Badge>
+                <Badge variant="secondary">
+                  Priority: {email.classification?.priority}
+                </Badge>
+                <Badge variant="outline">
+                  Sentiment: {email.classification?.sentiment}
+                </Badge>
+                <Badge variant="outline">
+                  Label: {email.classification?.label}
+                </Badge>
+                <Badge variant="outline">
+                  Intent: {email.classification?.intent}
+                </Badge>
                 {loadingEmailId === email.id && (
-                  <span className="text-xs text-blue-500 ml-auto">Loading...</span>
+                  <span className="text-xs text-blue-500 ml-auto">
+                    Loading...
+                  </span>
                 )}
               </CardContent>
             </Card>
@@ -269,7 +299,9 @@ const DashboardView = () => {
           <Card className="mb-6">
             <CardHeader>
               <CardTitle>Email Summary Insights</CardTitle>
-              <CardDescription>Interactive overview of AI classifications</CardDescription>
+              <CardDescription>
+                Interactive overview of AI classifications
+              </CardDescription>
             </CardHeader>
             <Tabs value={activeInsightTab} onValueChange={setActiveInsightTab}>
               <TabsList className="mb-2">
@@ -278,12 +310,14 @@ const DashboardView = () => {
                 <TabsTrigger value="label">Label</TabsTrigger>
                 <TabsTrigger value="intent">Intent</TabsTrigger>
               </TabsList>
-              
+
               <CardContent>
                 <TabsContent value="priority" className="mt-0">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="h-[300px]">
-                      <h3 className="font-semibold mb-2 text-center">Priority Distribution</h3>
+                      <h3 className="font-semibold mb-2 text-center">
+                        Priority Distribution
+                      </h3>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -294,12 +328,17 @@ const DashboardView = () => {
                             cy="50%"
                             outerRadius={100}
                             fill="#8884d8"
-                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            label={({ name, percent }) =>
+                              `${name} ${(percent * 100).toFixed(0)}%`
+                            }
                           >
                             {priorityData.map((entry, index) => (
-                              <Cell 
-                                key={`cell-${index}`} 
-                                fill={PRIORITY_COLORS[entry.name.toLowerCase()] || "#9ca3af"} 
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={
+                                  PRIORITY_COLORS[entry.name.toLowerCase()] ||
+                                  "#9ca3af"
+                                }
                               />
                             ))}
                           </Pie>
@@ -323,15 +362,22 @@ const DashboardView = () => {
                             <TableRow key={item.name}>
                               <TableCell className="font-medium">
                                 <div className="flex items-center">
-                                  <div 
-                                    className="w-3 h-3 rounded-full mr-2" 
-                                    style={{ backgroundColor: PRIORITY_COLORS[item.name.toLowerCase()] || "#9ca3af" }}
+                                  <div
+                                    className="w-3 h-3 rounded-full mr-2"
+                                    style={{
+                                      backgroundColor:
+                                        PRIORITY_COLORS[
+                                          item.name.toLowerCase()
+                                        ] || "#9ca3af",
+                                    }}
                                   ></div>
                                   {item.name}
                                 </div>
                               </TableCell>
                               <TableCell>{item.value}</TableCell>
-                              <TableCell>{`${Math.round((item.value / emails.length) * 100)}%`}</TableCell>
+                              <TableCell>{`${Math.round(
+                                (item.value / emails.length) * 100
+                              )}%`}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -339,11 +385,13 @@ const DashboardView = () => {
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="sentiment" className="mt-0">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="h-[300px]">
-                      <h3 className="font-semibold mb-2 text-center">Sentiment Analysis</h3>
+                      <h3 className="font-semibold mb-2 text-center">
+                        Sentiment Analysis
+                      </h3>
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                           data={sentimentData}
@@ -356,9 +404,12 @@ const DashboardView = () => {
                           <Legend />
                           <Bar dataKey="value" name="Count">
                             {sentimentData.map((entry, index) => (
-                              <Cell 
-                                key={`cell-${index}`} 
-                                fill={SENTIMENT_COLORS[entry.name.toLowerCase()] || "#9ca3af"} 
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={
+                                  SENTIMENT_COLORS[entry.name.toLowerCase()] ||
+                                  "#9ca3af"
+                                }
                               />
                             ))}
                           </Bar>
@@ -380,15 +431,22 @@ const DashboardView = () => {
                             <TableRow key={item.name}>
                               <TableCell className="font-medium">
                                 <div className="flex items-center">
-                                  <div 
-                                    className="w-3 h-3 rounded-full mr-2" 
-                                    style={{ backgroundColor: SENTIMENT_COLORS[item.name.toLowerCase()] || "#9ca3af" }}
+                                  <div
+                                    className="w-3 h-3 rounded-full mr-2"
+                                    style={{
+                                      backgroundColor:
+                                        SENTIMENT_COLORS[
+                                          item.name.toLowerCase()
+                                        ] || "#9ca3af",
+                                    }}
                                   ></div>
                                   {item.name}
                                 </div>
                               </TableCell>
                               <TableCell>{item.value}</TableCell>
-                              <TableCell>{`${Math.round((item.value / emails.length) * 100)}%`}</TableCell>
+                              <TableCell>{`${Math.round(
+                                (item.value / emails.length) * 100
+                              )}%`}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -396,11 +454,13 @@ const DashboardView = () => {
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="label" className="mt-0">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="h-[300px]">
-                      <h3 className="font-semibold mb-2 text-center">Label Distribution</h3>
+                      <h3 className="font-semibold mb-2 text-center">
+                        Label Distribution
+                      </h3>
                       <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                           <Pie
@@ -411,12 +471,17 @@ const DashboardView = () => {
                             cy="50%"
                             outerRadius={100}
                             fill="#8884d8"
-                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                            label={({ name, percent }) =>
+                              `${name} ${(percent * 100).toFixed(0)}%`
+                            }
                           >
                             {labelData.map((entry, index) => (
-                              <Cell 
-                                key={`cell-${index}`} 
-                                fill={LABEL_COLORS[entry.name.toLowerCase()] || "#9ca3af"} 
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={
+                                  LABEL_COLORS[entry.name.toLowerCase()] ||
+                                  "#9ca3af"
+                                }
                               />
                             ))}
                           </Pie>
@@ -440,15 +505,21 @@ const DashboardView = () => {
                             <TableRow key={item.name}>
                               <TableCell className="font-medium">
                                 <div className="flex items-center">
-                                  <div 
-                                    className="w-3 h-3 rounded-full mr-2" 
-                                    style={{ backgroundColor: LABEL_COLORS[item.name.toLowerCase()] || "#9ca3af" }}
+                                  <div
+                                    className="w-3 h-3 rounded-full mr-2"
+                                    style={{
+                                      backgroundColor:
+                                        LABEL_COLORS[item.name.toLowerCase()] ||
+                                        "#9ca3af",
+                                    }}
                                   ></div>
                                   {item.name}
                                 </div>
                               </TableCell>
                               <TableCell>{item.value}</TableCell>
-                              <TableCell>{`${Math.round((item.value / emails.length) * 100)}%`}</TableCell>
+                              <TableCell>{`${Math.round(
+                                (item.value / emails.length) * 100
+                              )}%`}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -456,11 +527,13 @@ const DashboardView = () => {
                     </div>
                   </div>
                 </TabsContent>
-                
+
                 <TabsContent value="intent" className="mt-0">
                   <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div className="h-[300px]">
-                      <h3 className="font-semibold mb-2 text-center">Intent Analysis</h3>
+                      <h3 className="font-semibold mb-2 text-center">
+                        Intent Analysis
+                      </h3>
                       <ResponsiveContainer width="100%" height="100%">
                         <BarChart
                           data={intentData}
@@ -473,9 +546,12 @@ const DashboardView = () => {
                           <Legend />
                           <Bar dataKey="value" name="Count">
                             {intentData.map((entry, index) => (
-                              <Cell 
-                                key={`cell-${index}`} 
-                                fill={INTENT_COLORS[entry.name.toLowerCase()] || "#9ca3af"} 
+                              <Cell
+                                key={`cell-${index}`}
+                                fill={
+                                  INTENT_COLORS[entry.name.toLowerCase()] ||
+                                  "#9ca3af"
+                                }
                               />
                             ))}
                           </Bar>
@@ -497,15 +573,22 @@ const DashboardView = () => {
                             <TableRow key={item.name}>
                               <TableCell className="font-medium">
                                 <div className="flex items-center">
-                                  <div 
-                                    className="w-3 h-3 rounded-full mr-2" 
-                                    style={{ backgroundColor: INTENT_COLORS[item.name.toLowerCase()] || "#9ca3af" }}
+                                  <div
+                                    className="w-3 h-3 rounded-full mr-2"
+                                    style={{
+                                      backgroundColor:
+                                        INTENT_COLORS[
+                                          item.name.toLowerCase()
+                                        ] || "#9ca3af",
+                                    }}
                                   ></div>
                                   {item.name}
                                 </div>
                               </TableCell>
                               <TableCell>{item.value}</TableCell>
-                              <TableCell>{`${Math.round((item.value / emails.length) * 100)}%`}</TableCell>
+                              <TableCell>{`${Math.round(
+                                (item.value / emails.length) * 100
+                              )}%`}</TableCell>
                             </TableRow>
                           ))}
                         </TableBody>
@@ -518,7 +601,9 @@ const DashboardView = () => {
           </Card>
         )
       ) : (
-        <p className="text-gray-500">No emails found matching your search criteria.</p>
+        <p className="text-gray-500">
+          No emails found matching your search criteria.
+        </p>
       )}
     </div>
   );

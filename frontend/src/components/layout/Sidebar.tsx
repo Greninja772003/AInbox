@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
-  Mail,
   LayoutDashboard,
   Inbox,
   Send,
@@ -40,11 +39,17 @@ const Sidebar = () => {
       >
         <div className="p-4 flex items-center">
           {!collapsed && (
-            <Mail className="mr-2 text-sidebar-accent" size={24} />
+            <>
+              <img src="/logo.png" alt="AInbox Logo" className="w-8 h-8 mr-2" />
+              <h1 className="text-xl font-bold tracking-wide">AInbox</h1>
+            </>
           )}
-          {!collapsed && <h1 className="text-xl font-bold">MailAgent</h1>}
           {collapsed && (
-            <Mail className="mx-auto text-sidebar-accent" size={24} />
+            <img
+              src="/converted_image.png"
+              alt="AInbox Logo"
+              className="w-8 h-8 mx-auto"
+            />
           )}
         </div>
 

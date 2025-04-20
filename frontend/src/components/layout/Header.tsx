@@ -1,16 +1,7 @@
 import { useState } from "react";
-import { 
-  Search, 
-  Bell, 
-  HelpCircle, 
-  User, 
-  X, 
-  RefreshCcw, 
-  Bot 
-} from "lucide-react";
+import { User, Bot } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -28,64 +19,34 @@ import {
 } from "@/components/ui/tooltip";
 
 const Header = () => {
-  const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await axios.get("http://localhost:5000/auth/logout", { withCredentials: true });
+      await axios.get("http://localhost:5000/auth/logout", {
+        withCredentials: true,
+      });
       navigate("/");
     } catch (error) {
       console.error("Logout failed:", error);
     }
   };
 
+  // Handler for AI Assistant button click
+  const handleNavigateToAISettings = () => {
+    // Navigate to settings page with AI preferences tab selected
+    navigate("/settings?tab=ai");
+  };
+
   return (
     <header className="bg-white border-b border-gray-200 px-4 py-2 flex items-center justify-end">
-     
-      
-      <div className="flex items-center space-x-1">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-700">
-                <RefreshCcw size={18} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Refresh</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative text-gray-500 hover:text-gray-700">
-                <Bell size={18} />
-                <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Notifications</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button variant="ghost" size="icon" className="text-gray-500 hover:text-gray-700">
-                <HelpCircle size={18} />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Help</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-        
-        <Button variant="outline" size="sm" className="ml-2 gap-2 hidden md:flex">
+      <div className="flex items-center space-x-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="gap-2"
+          onClick={handleNavigateToAISettings}
+        >
           <Bot size={16} />
           <span>AI Assistant</span>
         </Button>
@@ -100,10 +61,14 @@ const Header = () => {
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem>Profile Settings</DropdownMenuItem>
-            <DropdownMenuItem>AI Agent Preferences</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleNavigateToAISettings}>
+              AI Agent Preferences
+            </DropdownMenuItem>
             <DropdownMenuItem>Help & Support</DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-red-500">Log out</DropdownMenuItem>
+            <DropdownMenuItem onClick={handleLogout} className="text-red-500">
+              Log out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

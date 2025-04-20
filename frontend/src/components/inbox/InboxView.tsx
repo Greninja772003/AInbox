@@ -36,7 +36,9 @@ const Inbox = () => {
         if (err.response?.status === 401) {
           setError("Your session has expired. Please log in again.");
         } else {
-          setError(`Failed to load emails: ${err.response?.data?.error || err.message}`);
+          setError(
+            `Failed to load emails: ${err.response?.data?.error || err.message}`
+          );
         }
       } finally {
         setLoading(false);
@@ -62,7 +64,9 @@ const Inbox = () => {
         if (err.response?.status === 401) {
           setError("Your session has expired. Please log in again.");
         } else {
-          setError(`Failed to load emails: ${err.response?.data?.error || err.message}`);
+          setError(
+            `Failed to load emails: ${err.response?.data?.error || err.message}`
+          );
         }
       })
       .finally(() => {
@@ -72,15 +76,18 @@ const Inbox = () => {
 
   const handleNavigateToDetails = (emailId) => {
     setLoadingEmailId(emailId);
-    
+
     // Mark the email as visited
     if (!isVisited(emailId)) {
       const updatedVisitedEmails = [...visitedEmails, emailId];
       setVisitedEmails(updatedVisitedEmails);
       // Save to localStorage
-      localStorage.setItem("visitedEmails", JSON.stringify(updatedVisitedEmails));
+      localStorage.setItem(
+        "visitedEmails",
+        JSON.stringify(updatedVisitedEmails)
+      );
     }
-    
+
     navigate(`/inbox/${emailId}`);
   };
 
@@ -109,7 +116,9 @@ const Inbox = () => {
             <li
               key={email.id}
               className={`border p-2 rounded-md cursor-pointer hover:bg-gray-50 ${
-                isVisited(email.id) ? 'bg-gray-50' : 'border-l-4 border-l-blue-500'
+                isVisited(email.id)
+                  ? "bg-gray-50"
+                  : "border-l-4 border-l-blue-500"
               }`}
               onClick={() => handleNavigateToDetails(email.id)}
             >
@@ -122,7 +131,10 @@ const Inbox = () => {
                 </div>
                 <div className="flex items-center">
                   {!isVisited(email.id) && (
-                    <Badge variant="outline" className="mr-1 text-xs py-0 bg-blue-50 text-blue-700 border-blue-300">
+                    <Badge
+                      variant="outline"
+                      className="mr-1 text-xs py-0 bg-blue-50 text-blue-700 border-blue-300"
+                    >
                       New
                     </Badge>
                   )}
@@ -132,9 +144,11 @@ const Inbox = () => {
                 </div>
               </div>
               <div className="flex justify-between items-center text-xs text-gray-500 mt-1">
-                <span>From: {email.from.split('<')[0]}</span>
+                <span>From: {email.from.split("<")[0]}</span>
                 <span className="text-gray-400">
-                  {email.date ? format(new Date(email.date), "d MMM, h:mm a") : ""}
+                  {email.date
+                    ? format(new Date(email.date), "d MMM, h:mm a")
+                    : ""}
                 </span>
               </div>
             </li>

@@ -630,7 +630,7 @@ app.get("/api/emails", ensureValidToken, async (req, res) => {
       console.log("Fetching message list from Gmail API...");
       const { data } = await gmail.users.messages.list({
         userId: "me",
-        maxResults: 5,
+        maxResults: 30,
         labelIds: ["INBOX"],
       });
 
